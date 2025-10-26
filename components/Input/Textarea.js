@@ -1,0 +1,31 @@
+import { AbstractInput } from './AbstractInput.js';
+
+export class Textarea extends AbstractInput {
+    constructor(options) {
+        super({
+            tagName: 'textarea',
+            style: [
+                'resize: none',
+                'overflow-y: hidden',
+            ],
+            options
+        });
+
+        Textarea.init.call(this);
+    }
+
+    static async init() {
+        ['focus', 'input', 'cut', 'paste', 'selectionchange'].forEach(value => {
+            this.node.addEventListener(value, this.auroresize.bind(this));
+        });
+
+        setTimeout(() => {
+            this.bind('text', this, 'auroresize', { run: true });
+        });
+    }
+
+    auroresize() {
+        this.node.style.height = 'auto';
+        this.node.style.height = this.node.scrollHeight + 'px';
+    }
+}
